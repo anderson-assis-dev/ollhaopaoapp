@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Linking } from 'react-native';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { BakeryDetailScreen } from '../screens/BakeryDetailScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
@@ -9,8 +10,11 @@ import { ReservationScreen } from '../screens/ReservationScreen';
 import { PaymentScreen } from '../screens/PaymentScreen';
 
 type Screen =
+  | 'onboarding'
   | 'login'
   | 'register'
+  | 'smsVerification'
+  | 'initialSetup'
   | 'home'
   | 'bakeryDetail'
   | 'notifications'
@@ -29,7 +33,7 @@ interface NavigationState {
 
 export const AppNavigator: React.FC = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
-    screen: 'login',
+    screen: 'onboarding',
   });
 
   const navigate = (screen: Screen, params?: NavigationState['params']) => {
@@ -120,13 +124,15 @@ export const AppNavigator: React.FC = () => {
           />
         );
 
-      default:
+      case 'onboarding':
         return (
-          <LoginScreen
-            onLogin={() => navigate('home')}
-            onNavigateToRegister={() => navigate('register')}
+          <OnboardingScreen
+            onComplete={() => navigate('login')}
           />
         );
+
+      default:
+        return null;
     }
   };
 
